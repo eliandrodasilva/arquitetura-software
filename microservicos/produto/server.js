@@ -4,6 +4,9 @@ const app = express();
 
 app.use(express.json());
 
+const PRODUTOS_URL =
+  process.env.PRODUTOS_URL || "http://localhost:3001";
+
 const produtos = [
   { id: 1, nome: "Teclado", preco: 150 },
   { id: 2, nome: "Mouse", preco: 80 },
@@ -29,3 +32,10 @@ app.get("/produtos/:id", (req, res) => {
 app.listen(3001, () => {
   console.log("Produtos rodando na porta 3001");
 });
+
+const resposta = await axios.get(
+  `${PRODUTOS_URL}/produtos/${produtoId}`,
+  {
+    timeout: 3000
+  }
+);
