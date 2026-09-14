@@ -6,6 +6,8 @@ const app = express();
 
 app.use(express.json());
 
+const PORT = process.env.PORT || 3001;
+
 async function criarTabela() {
   await db.query(`
     CREATE TABLE IF NOT EXISTS produtos (
@@ -17,8 +19,6 @@ async function criarTabela() {
 
   console.log("Tabela de produtos pronta");
 }
-
-criarTabela();
 
 app.get("/produtos", async (req, res) => {
   try {
@@ -82,6 +82,16 @@ app.post("/produtos", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Produtos rodando na porta 3001");
-});
+async function iniciar() {
+  try {
+    await criarTabela();
+    app.listen(PORT, () => {
+      console.log(`Produtos rodando na porta ${PORT}`);
+    });
+  } catch (erro) {
+    console.error("Erro ao inicializar o serviço de produtos:", erro);
+    process.exit(1);
+  }
+}
+
+iniciar();

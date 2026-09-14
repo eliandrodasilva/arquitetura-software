@@ -5,6 +5,9 @@ const app = express();
 
 app.use(express.json());
 
+const PRODUTOS_URL = process.env.PRODUTOS_URL || "http://localhost:3001";
+const PORT = process.env.PORT || 3002;
+
 const pedidos = [];
 
 app.get("/pedidos", (req, res) => {
@@ -36,7 +39,7 @@ app.post("/pedidos", async (req, res) => {
 
   try {
     const resposta = await axios.get(
-      `http://localhost:3001/produtos/${produtoId}`,
+      `${PRODUTOS_URL}/produtos/${produtoId}`,
       {
         timeout: 3000
       }
@@ -67,6 +70,6 @@ app.post("/pedidos", async (req, res) => {
   }
 });
 
-app.listen(3002, () => {
-  console.log("Pedidos rodando na porta 3002");
+app.listen(PORT, () => {
+  console.log(`Pedidos rodando na porta ${PORT}`);
 });
