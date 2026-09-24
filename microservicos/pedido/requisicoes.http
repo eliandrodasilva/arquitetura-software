@@ -1,15 +1,15 @@
 ### Listar pedidos
-GET http://localhost:3002/pedidos
+GET http://localhost:3002/pedido
 
-### Criar pedido
-POST http://localhost:3002/pedidos
+### Criar pedido (com cliente_id e produto_id)
+POST http://localhost:3002/pedido
 Content-Type: application/json
 
 {
-  "produtoId": 1,
-  "nome": "Cadeira",
+  "cliente_id": 1,
+  "produto_id": 1,
   "quantidade": 2
 }
 
 ### Buscar pedido por ID
-GET http://localhost:3002/pedidos/1
+GET http://localhost:3002/pedido/1

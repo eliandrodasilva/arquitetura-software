@@ -1,9 +1,24 @@
 services:
+  gateway:
+    build: ./microservicos/gateway
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      PRODUTOS_URL: http://produto:3001
+      PEDIDOS_URL: http://pedido:3002
+      CLIENTES_URL: http://cliente:3003
+    depends_on:
+      - produto
+      - pedido
+      - cliente
+
   produto:
     build: ./microservicos/produto
     ports:
       - "3001:3001"
     environment:
+      PORT: 3001
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/produtos_db
     depends_on:
       postgres:
@@ -14,9 +29,28 @@ services:
     ports:
       - "3002:3002"
     environment:
+      PORT: 3002
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/produtos_db
       PRODUTOS_URL: http://produto:3001
+      CLIENTES_URL: http://cliente:3003
     depends_on:
-      - produto
+      postgres:
+        condition: service_healthy
+      produto:
+        condition: service_started
+      cliente:
+        condition: service_started
+
+  cliente:
+    build: ./microservicos/cliente
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/produtos_db
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:16-alpine
@@ -33,6 +67,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:

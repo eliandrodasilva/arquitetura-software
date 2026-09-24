@@ -1,5 +1,5 @@
 {
-  "name": "pedido",
+  "name": "cliente",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -12,7 +12,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "axios": "^1.19.0",
     "express": "^5.2.1",
     "pg": "^8.23.0"
   },

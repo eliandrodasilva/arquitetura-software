@@ -1,83 +1,82 @@
 const express = require("express");
-const axios = require("axios");
 const db = require("./db");
 
 const app = express();
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3003;
 
 async function criarTabela() {
   await db.query(`
-    CREATE TABLE IF NOT EXISTS produtos (
+    CREATE TABLE IF NOT EXISTS clientes (
       id SERIAL PRIMARY KEY,
       nome VARCHAR(100) NOT NULL,
-      preco NUMERIC(10, 2) NOT NULL
+      email VARCHAR(100)
     )
   `);
 
-  console.log("Tabela de produtos pronta");
+  console.log("Tabela de clientes pronta");
 }
 
-app.get("/produto", async (req, res) => {
+app.get("/cliente", async (req, res) => {
   try {
     const resultado = await db.query(
-      "SELECT * FROM produtos ORDER BY id"
+      "SELECT * FROM clientes ORDER BY id"
     );
 
     res.json(resultado.rows);
   } catch (erro) {
     res.status(500).json({
-      erro: "Erro ao buscar produtos"
+      erro: "Erro ao buscar clientes"
     });
   }
 });
 
-app.get("/produto/:id", async (req, res) => {
+app.get("/cliente/:id", async (req, res) => {
   try {
     const resultado = await db.query(
-      "SELECT * FROM produtos WHERE id = $1",
+      "SELECT * FROM clientes WHERE id = $1",
       [req.params.id]
     );
 
-    const produto = resultado.rows[0];
+    const cliente = resultado.rows[0];
 
-    if (!produto) {
+    if (!cliente) {
       return res.status(404).json({
-        erro: "Produto não encontrado"
+        erro: "Cliente não encontrado"
       });
     }
 
-    res.json(produto);
+    res.json(cliente);
   } catch (erro) {
     res.status(500).json({
-      erro: "Erro ao buscar produto"
+      erro: "Erro ao buscar cliente"
     });
   }
 });
 
-app.post("/produto", async (req, res) => {
-  const { nome, preco } = req.body;
+app.post("/cliente", async (req, res) => {
+  const { nome, email } = req.body;
 
-  if (!nome || preco === undefined || preco <= 0) {
+  if (!nome) {
     return res.status(400).json({
-      erro: "Nome e preço válido são obrigatórios"
+      erro: "Nome é obrigatório"
     });
   }
 
   try {
     const resultado = await db.query(
-      `INSERT INTO produtos (nome, preco)
+      `INSERT INTO clientes (nome, email)
        VALUES ($1, $2)
        RETURNING *`,
-      [nome, preco]
+      [nome, email || null]
     );
 
     res.status(201).json(resultado.rows[0]);
   } catch (erro) {
     res.status(500).json({
-      erro: "Erro ao criar produto"
+      erro: "Erro ao criar cliente"
     });
   }
 });
@@ -86,10 +85,10 @@ async function iniciar() {
   try {
     await criarTabela();
     app.listen(PORT, () => {
-      console.log(`Produtos rodando na porta ${PORT}`);
+      console.log(`Clientes rodando na porta ${PORT}`);
     });
   } catch (erro) {
-    console.error("Erro ao inicializar o serviço de produtos:", erro);
+    console.error("Erro ao inicializar o serviço de clientes:", erro);
     process.exit(1);
   }
 }

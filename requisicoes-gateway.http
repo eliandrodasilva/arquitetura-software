@@ -1,0 +1,48 @@
+### 1. Status do API Gateway
+GET http://localhost:3000/
+
+### 2. Cadastrar Cliente (via Gateway)
+POST http://localhost:3000/cliente
+Content-Type: application/json
+
+{
+  "nome": "Eliandro Silva",
+  "email": "eliandro@exemplo.com"
+}
+
+### 3. Listar Clientes (via Gateway)
+GET http://localhost:3000/cliente
+
+### 4. Consultar Cliente por ID (via Gateway)
+GET http://localhost:3000/cliente/1
+
+### 5. Cadastrar Produto (via Gateway)
+POST http://localhost:3000/produto
+Content-Type: application/json
+
+{
+  "nome": "Cadeira Ergonômica",
+  "preco": 1250.00
+}
+
+### 6. Listar Produtos (via Gateway)
+GET http://localhost:3000/produto
+
+### 7. Consultar Produto por ID (via Gateway)
+GET http://localhost:3000/produto/1
+
+### 8. Criar Pedido (com cliente_id e produto_id via Gateway)
+POST http://localhost:3000/pedido
+Content-Type: application/json
+
+{
+  "cliente_id": 1,
+  "produto_id": 1,
+  "quantidade": 2
+}
+
+### 9. Listar Pedidos (via Gateway)
+GET http://localhost:3000/pedido
+
+### 10. Buscar Pedido por ID (via Gateway)
+GET http://localhost:3000/pedido/1
